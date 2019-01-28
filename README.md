@@ -1,1 +1,1 @@
-# Incremental andom Delaunay algorithm
+# Incremental random Delaunay algorithm
