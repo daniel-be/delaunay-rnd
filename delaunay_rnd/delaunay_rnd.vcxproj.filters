@@ -36,6 +36,9 @@
     <ClCompile Include="delaunay_rnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.hpp">

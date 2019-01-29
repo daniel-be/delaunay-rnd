@@ -9,6 +9,7 @@ class Quad_edge
 {
 public:
 	static Edge* make_edge();
+	static void delete_edge(Edge* edg);
 	static void splice(Edge* const a, Edge* const b);
 	Quad_edge();
 	~Quad_edge();

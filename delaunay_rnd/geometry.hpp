@@ -8,6 +8,7 @@ struct Point
 	Point();
 	Point(double x, double y);
 	Point(double x, double y, double z);
+	bool operator==(const Point& p);
 	~Point();
 };
 

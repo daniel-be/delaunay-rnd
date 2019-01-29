@@ -1,6 +1,13 @@
 #include "edge.hpp"
 
-Edge::Edge() { }
+int Edge::id_cnt = 0;
+
+Edge::Edge() : id(Edge::id_cnt++), r(-1), next(nullptr), data(nullptr), quad_edge(nullptr)  { }
+
+int Edge::get_id() const
+{
+	return this->id;
+}
 
 Edge* Edge::rot() const 
 {

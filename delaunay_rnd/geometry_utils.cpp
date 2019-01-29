@@ -26,7 +26,7 @@ double coplanar(const Point& p, const Plane& pla)
 	return n.o.x[0] * p.x[0] + n.o.x[1] * p.x[1] + n.o.x[2] * p.x[2] - (n.o.x[0] * pla.p.o.x[0] + n.o.x[1] * pla.p.o.x[1] + n.o.x[2] * pla.p.o.x[2]);
 }
 
-double in_circle(const Point& a, const Point& b, const Point& c, const Point& d)
+bool in_circle(const Point& a, const Point& b, const Point& c, const Point& d)
 {
 	Point p_d{ d.x[1], d.x[2], d.x[1] * d.x[1] + d.x[2] * d.x[2] };
 	Vector v0{ Point{ a.x[1], a.x[2], a.x[1] * a.x[1] + a.x[2] * a.x[2] } };
@@ -34,5 +34,5 @@ double in_circle(const Point& a, const Point& b, const Point& c, const Point& d)
 	Vector v2{ Point{ c.x[1], c.x[2], c.x[1] * c.x[1] + c.x[2] * c.x[2] } };
 	Vector v0v1 = v1 - v0;
 	Vector v0v2 = v2 - v0;
-	return coplanar(p_d, Plane{ v0, v0v1, v0v2 });
+	return coplanar(p_d, Plane{ v0, v0v1, v0v2 }) < 0;
 }

@@ -6,6 +6,11 @@ Edge* Quad_edge::make_edge()
 	return &qe->e[0];
 }
 
+void Quad_edge::delete_edge(Edge* edg)
+{
+	delete edg->get_quad_edge().get();
+}
+
 void Quad_edge::splice(Edge* const a, Edge* const b)
 {
 	Edge* alpha = a->o_next()->rot();

@@ -8,6 +8,7 @@ class Edge
 {
 public:
 	Edge();
+	int get_id() const;
 	Edge* rot() const;
 	Edge* inv_rot() const;
 	Edge* sym() const;
@@ -29,6 +30,8 @@ public:
 	~Edge();
 
 private:
+	static int id_cnt;
+	int id;
 	int r; // Index in quad edge structure.
 	Edge* next; // Next CCW edge.
 	std::shared_ptr<Vertex> data; // Origin vertex.

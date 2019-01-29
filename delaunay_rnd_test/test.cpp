@@ -53,6 +53,7 @@ TEST(geometry_utils, CCW)
 	EXPECT_EQ(0, ccw(Point(0, 0), Point(1, 1), Point(2, 2)));
 	EXPECT_LT(ccw(Point(0, 0), Point(1, 1), Point(2, 1)), 0);
 	EXPECT_GT(ccw(Point(0, 0), Point(1, 1), Point(2, 3)), 0);
+	EXPECT_EQ(0, ccw(Point(0, 0), Point(2, 2), Point(1, 1)));
 }
 
 TEST(geometry_utils, RightLeftOf)
@@ -69,16 +70,7 @@ TEST(geometry_utils, RightLeftOf)
 
 TEST(geometry_utils, InCircle)
 {
-	EXPECT_EQ(0, in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(0, 3)));
-	EXPECT_LT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(3, 3)), 0);
-	EXPECT_LT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(2, 2)), 0);
-	EXPECT_LT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(3, 1)), 0);
-	EXPECT_LT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(1, 3)), 0);
-	EXPECT_LT(in_circle(Point(0, 0), Point(800, 0), Point(800, 800), Point(0, 799)), 0);
-	EXPECT_GT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(0, 0)), 0);
-	EXPECT_GT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(10, 10)), 0);
-	EXPECT_GT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(7, 3)), 0);
-	EXPECT_GT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(40, 40)), 0);
-	EXPECT_GT(in_circle(Point(3, 0), Point(6, 3), Point(3, 6), Point(800, 800)), 0);
-	EXPECT_GT(in_circle(Point(0, 0), Point(800, 0), Point(800, 800), Point(0, 801)), 0);
+	EXPECT_TRUE(in_circle(Point(2, 0), Point(0, -2), Point(2, -4), Point(2, -2)));
+	EXPECT_FALSE(in_circle(Point(2, 0), Point(0, -2), Point(2, -4), Point(0, 0)));
+	EXPECT_FALSE(in_circle(Point(2, 0), Point(0, -2), Point(2, -4), Point(4, -2)));
 }

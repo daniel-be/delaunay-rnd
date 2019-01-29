@@ -11,6 +11,11 @@ Point::Point(double x, double y, double z)
 	this->x[2] = z;
 }
 
+bool Point::operator==(const Point& p)
+{
+	return this->x[0] == p.x[0] && this->x[1] == p.x[1] && this->x[2] == p.x[2];
+}
+
 Point::~Point() { }
 
 Vector::Vector() { }
