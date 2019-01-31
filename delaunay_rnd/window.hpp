@@ -9,7 +9,7 @@ public:
 	Window(int width, int height);
 	bool is_initialized() const;
 	void handle_events();
-	void render() const;
+	void render();
 	~Window();
 
 private:
@@ -17,10 +17,10 @@ private:
 	bool initialized;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	Delaunay_rnd dlny;
+	std::vector<Point> pts;
 
 	void init(int width, int height);
 	void on_btn_mouse_release(SDL_MouseButtonEvent mouse_button_event);
-	void draw_delaunay() const;
+	void draw_delaunay();
 	void draw_line(const Point& s, const Point& e) const;
 };

@@ -2,7 +2,6 @@
 
 Window::Window(int width, int height) : width(width), height(height), initialized(false), window(nullptr), renderer(nullptr)
 {
-	this->dlny = Delaunay_rnd{ Point{ 0, 0 }, Point{ 0, -1600 }, Point{ 1600, 0 } };
 	this->init(width, height);
 }
 
@@ -28,7 +27,7 @@ void Window::handle_events()
 	}
 }
 
-void Window::render() const
+void Window::render()
 {
 	SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(this->renderer);
@@ -75,19 +74,18 @@ void Window::on_btn_mouse_release(SDL_MouseButtonEvent mouse_button_event)
 		SDL_Point p;
 		p.x = mouse_button_event.x;
 		p.y = -mouse_button_event.y;
-		this->dlny.insert_site(Point{ static_cast<double>(p.x), static_cast<double>(p.y) });
+		this->pts.push_back(Point{ static_cast<double>(p.x), static_cast<double>(p.y) });
+		//this->dlny.insert_site(Point{ static_cast<double>(p.x), static_cast<double>(p.y) });
 	}
 }
 
-void Window::draw_delaunay() const
+void Window::draw_delaunay()
 {
-	std::map<int, Edge*> edgs = this->dlny.get_edges();
+	Delaunay_rnd dlny{ Point{ 0, 0 }, Point{ 0, -1600 }, Point{ 1600, 0 }, this->pts };
+	std::map<int, Edge*> edgs = dlny.get_edges();
 	for (std::pair<int, Edge*> edg : edgs)
 	{
-		if (!(edg.first == 0 || edg.first == 8))
-		{
-			this->draw_line(*edg.second->org()->get_pos(), *edg.second->dest()->get_pos());
-		}
+		this->draw_line(*edg.second->org()->get_pos(), *edg.second->dest()->get_pos());
 	}
 }
 

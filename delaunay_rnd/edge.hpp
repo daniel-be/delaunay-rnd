@@ -25,8 +25,8 @@ public:
 	void set_r(const int r);
 	void set_endpoints(const std::shared_ptr<Vertex> org, const std::shared_ptr<Vertex> dest);
 	void set_next(Edge* const edg);
-	std::shared_ptr<Quad_edge> get_quad_edge() const;
-	void set_quad_edge(std::shared_ptr<Quad_edge> quad_edge);
+	Quad_edge* get_quad_edge() const;
+	void set_quad_edge(Quad_edge* quad_edge);
 	~Edge();
 
 private:
@@ -35,5 +35,5 @@ private:
 	int r; // Index in quad edge structure.
 	Edge* next; // Next CCW edge.
 	std::shared_ptr<Vertex> data; // Origin vertex.
-	std::shared_ptr<Quad_edge> quad_edge;
+	Quad_edge* quad_edge;
 };

@@ -8,7 +8,7 @@ Edge* Quad_edge::make_edge()
 
 void Quad_edge::delete_edge(Edge* edg)
 {
-	delete edg->get_quad_edge().get();
+	delete edg->get_quad_edge();
 }
 
 void Quad_edge::splice(Edge* const a, Edge* const b)
@@ -37,11 +37,10 @@ Quad_edge::Quad_edge()
 	this->e[1].set_next(&e[3]);
 	this->e[2].set_next(&e[2]);
 	this->e[3].set_next(&e[1]);
-	std::shared_ptr<Quad_edge> qe = std::shared_ptr<Quad_edge>(this);
-	this->e[0].set_quad_edge(qe);
-	this->e[1].set_quad_edge(qe);
-	this->e[2].set_quad_edge(qe);
-	this->e[3].set_quad_edge(qe);
+	this->e[0].set_quad_edge(this);
+	this->e[1].set_quad_edge(this);
+	this->e[2].set_quad_edge(this);
+	this->e[3].set_quad_edge(this);
 }
 
 Quad_edge::~Quad_edge() { }

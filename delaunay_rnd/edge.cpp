@@ -90,12 +90,12 @@ void Edge::set_next(Edge* const edg)
 	this->next = edg;
 }
 
-std::shared_ptr<Quad_edge> Edge::get_quad_edge() const
+Quad_edge* Edge::get_quad_edge() const
 {
 	return this->quad_edge;
 }
 
-void Edge::set_quad_edge(std::shared_ptr<Quad_edge> quad_edge)
+void Edge::set_quad_edge(Quad_edge* quad_edge)
 {
 	this->quad_edge = quad_edge;
 }

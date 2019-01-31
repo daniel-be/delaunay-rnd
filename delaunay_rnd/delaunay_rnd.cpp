@@ -4,8 +4,9 @@
 
 Delaunay_rnd::Delaunay_rnd(): start_edge(nullptr) { }
 
-Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c)
+Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point>& pts)
 {
+	if (pts.empty()) return;
 	std::shared_ptr<Point> p0 = std::make_shared<Point>(a);
 	std::shared_ptr<Point> p1 = std::make_shared<Point>(b);
 	std::shared_ptr<Point> p2 = std::make_shared<Point>(c);
@@ -22,6 +23,7 @@ Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c)
 	p2p0->set_endpoints(v2, v0);
 	Quad_edge::splice(p2p0->sym(), p0p1);
 	this->start_edge = std::shared_ptr<Edge>(p0p1);
+	this->calc_delaunay(pts);
 }
 
 void Delaunay_rnd::insert_site(const Point& p)
@@ -67,9 +69,50 @@ void Delaunay_rnd::insert_site(const Point& p)
 	} while (true);
 }
 
-std::shared_ptr<Edge> Delaunay_rnd::get_start_edge() const
+void Delaunay_rnd::calc_delaunay(std::vector<Point>& pts)
 {
-	return this->start_edge;
+	
+	for (Point p : pts)
+	{
+		this->insert_site(p);
+	}
+
+	std::vector<Point> ch_pts;
+	Edge* edg = this->start_edge.get();
+	std::shared_ptr<Vertex> first = edg->org();
+	do
+	{
+		Edge* ch_edg = edg->o_next();
+		do
+		{
+			ch_pts.push_back(*ch_edg->dest()->get_pos());
+			this->edgs.erase(ch_edg->get_id());
+			this->edgs.erase(ch_edg->sym()->get_id());
+			ch_edg = ch_edg->o_next();
+		} while (ch_edg != edg->o_prev());
+		this->edgs.erase(edg->get_id());
+		this->edgs.erase(edg->sym()->get_id());
+		edg = edg->r_prev();
+	} while (edg->org() != first);
+
+	std::vector<Point> ch = this->convex_hull(ch_pts);
+	for (int i = 0; i < ch.size(); i++)
+	{
+		Edge* edg = this->make_edge();
+		std::shared_ptr<Vertex> va;
+		std::shared_ptr<Vertex> vb;
+		if (i < ch.size() - 1)
+		{
+			va = std::make_shared<Vertex>(std::make_shared<Point>(ch[i]));
+			vb = std::make_shared<Vertex>(std::make_shared<Point>(ch[i + 1]));
+		}
+		else
+		{
+			va = std::make_shared<Vertex>(std::make_shared<Point>(ch[i]));
+			vb = std::make_shared<Vertex>(std::make_shared<Point>(ch[0]));
+		}
+		edg->set_endpoints(va, vb);
+	}
 }
 
 std::map<int, Edge*> Delaunay_rnd::get_edges() const
@@ -125,4 +168,39 @@ void Delaunay_rnd::swap(Edge* edg) const
 	Quad_edge::splice(edg, a->l_next());
 	Quad_edge::splice(edg->sym(), b->l_next());
 	edg->set_endpoints(a->dest(), b->dest());
+}
+
+std::vector<Point> Delaunay_rnd::convex_hull(std::vector<Point>& pts) const
+{
+	std::vector<Point> ret;
+	if (pts.empty()) return ret;
+
+	int p1 = 0;
+	for (size_t i = 1; i < pts.size(); i++)
+	{
+		if (pts[i] < pts[p1])
+		{
+			p1 = i;
+		}
+	}
+
+	int p = p1;
+	int q = 0;
+	do
+	{
+		ret.push_back(pts[p]);
+
+		q = (p + 1) % pts.size();
+		for (size_t i = 0; i < pts.size(); i++)
+		{
+			if (ccw(pts[p], pts[i], pts[q]) > 0)
+			{
+				q = i;
+			}
+		}
+
+		p = q;
+	} while (p != p1);
+
+	return ret;
 }
