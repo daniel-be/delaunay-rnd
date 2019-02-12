@@ -6,8 +6,8 @@ Delaunay_rnd::Delaunay_rnd(): start_edge(nullptr) { }
 
 Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point>& pts)
 {
-	if (pts.empty()) return;
-	std::shared_ptr<Point> p0 = std::make_shared<Point>(a);
+	if (pts.size() < 10) return;
+	/*std::shared_ptr<Point> p0 = std::make_shared<Point>(a);
 	std::shared_ptr<Point> p1 = std::make_shared<Point>(b);
 	std::shared_ptr<Point> p2 = std::make_shared<Point>(c);
 	std::shared_ptr<Vertex> v0 = std::make_shared<Vertex>(p0);
@@ -21,8 +21,31 @@ Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::
 	Edge* p2p0 = this->make_edge();
 	Quad_edge::splice(p1p2->sym(), p2p0);
 	p2p0->set_endpoints(v2, v0);
-	Quad_edge::splice(p2p0->sym(), p0p1);
-	this->start_edge = std::shared_ptr<Edge>(p0p1);
+	Quad_edge::splice(p2p0->sym(), p0p1);*/
+	std::vector<Point> ch = this->convex_hull(pts);
+	std::shared_ptr<Point> p0 = std::make_shared<Point>(ch[0]);
+	std::shared_ptr<Vertex> v0 = std::make_shared<Vertex>(p0);
+	std::shared_ptr<Point> pn = std::make_shared<Point>(ch[1]);
+	std::shared_ptr<Vertex> vn = std::make_shared<Vertex>(pn);
+	Edge* edg_first = this->make_edge();
+	edg_first->set_endpoints(v0, vn);
+	Edge* edg = edg_first;
+	for (int i = 2; i < ch.size(); i++)
+	{
+		std::shared_ptr<Point> pnn = std::make_shared<Point>(ch[i]);
+		std::shared_ptr<Vertex> vnn = std::make_shared<Vertex>(pnn);
+		Edge* edgn = this->make_edge();
+		edgn->set_endpoints(vn, vnn);
+		Quad_edge::splice(edg->sym(), edgn);
+		vn = vnn;
+		edg = edgn;
+	}
+	Edge* edg_last = this->make_edge();
+	edg_last->set_endpoints(vn, v0);
+	Quad_edge::splice(edg->sym(), edg_last);
+	Quad_edge::splice(edg_last->sym(), edg_first);
+	
+	this->start_edge = std::shared_ptr<Edge>(edg_first);
 	this->calc_delaunay(pts);
 }
 
@@ -77,7 +100,7 @@ void Delaunay_rnd::calc_delaunay(std::vector<Point>& pts)
 		this->insert_site(p);
 	}
 
-	std::vector<Point> ch_pts;
+	/*std::vector<Point> ch_pts;
 	Edge* edg = this->start_edge.get();
 	std::shared_ptr<Vertex> first = edg->org();
 	do
@@ -112,7 +135,7 @@ void Delaunay_rnd::calc_delaunay(std::vector<Point>& pts)
 			vb = std::make_shared<Vertex>(std::make_shared<Point>(ch[0]));
 		}
 		edg->set_endpoints(va, vb);
-	}
+	}*/
 }
 
 std::map<int, Edge*> Delaunay_rnd::get_edges() const
