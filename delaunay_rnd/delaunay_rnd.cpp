@@ -4,9 +4,9 @@
 
 Delaunay_rnd::Delaunay_rnd(): start_edge(nullptr) { }
 
-Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point>& pts)
+Delaunay_rnd::Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point> pts)
 {
-	if (pts.size() < 10) return;
+	if (pts.size() < 3) return;
 	/*std::shared_ptr<Point> p0 = std::make_shared<Point>(a);
 	std::shared_ptr<Point> p1 = std::make_shared<Point>(b);
 	std::shared_ptr<Point> p2 = std::make_shared<Point>(c);
@@ -193,6 +193,12 @@ void Delaunay_rnd::swap(Edge* edg) const
 	edg->set_endpoints(a->dest(), b->dest());
 }
 
+bool del(Point p) 
+{ 
+	Point comp{ -1, -1 };
+	return p == comp;
+}
+
 std::vector<Point> Delaunay_rnd::convex_hull(std::vector<Point>& pts) const
 {
 	std::vector<Point> ret;
@@ -224,6 +230,14 @@ std::vector<Point> Delaunay_rnd::convex_hull(std::vector<Point>& pts) const
 
 		p = q;
 	} while (p != p1);
+
+	for (int i = 0; i < ret.size(); i++)
+	{
+		for (int j = 0; j < pts.size(); j++)
+		{
+			if (ret[i] == pts[j]) pts.erase(pts.begin() + j);
+		}
+	}
 
 	return ret;
 }

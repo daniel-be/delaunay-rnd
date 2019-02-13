@@ -8,7 +8,7 @@ class Delaunay_rnd
 {
 public:
 	Delaunay_rnd();
-	Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point>& pts);
+	Delaunay_rnd(const Point& a, const Point& b, const Point& c, std::vector<Point> pts);
 	std::map<int, Edge*> get_edges() const;
 	~Delaunay_rnd();
 
